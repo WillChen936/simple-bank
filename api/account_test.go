@@ -58,7 +58,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			testCase.buildStubs(store)
 
-			server := newTestServer(t, store)
+			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
 			data, err := json.Marshal(testCase.body)

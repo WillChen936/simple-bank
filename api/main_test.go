@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func newTestServer(t *testing.T, store db.Store) *Server {
+func newTestServer(store db.Store) *Server {
 	config := utils.Config{}
 	server := NewServer(config, store)
 
@@ -18,6 +18,5 @@ func newTestServer(t *testing.T, store db.Store) *Server {
 
 func TestMain(m *testing.M) {
 	gin.SetMode(gin.TestMode)
-
 	os.Exit(m.Run())
 }

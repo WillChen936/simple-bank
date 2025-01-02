@@ -38,8 +38,11 @@ func RandomMoney() int64 {
 }
 
 func RandomCurrency() string {
-	currencies := Currencies
-	size := len(currencies)
+	var currencies []string
+	for currency := range Currencies {
+		currencies = append(currencies, currency)
+	}
 
+	size := len(currencies)
 	return currencies[rand.Intn(size)]
 }

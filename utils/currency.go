@@ -1,15 +1,12 @@
 package utils
 
-const (
-	USD string = "USD"
-	EUR string = "EUR"
-	CAD string = "CAD"
-)
+var Currencies = map[string]struct{}{
+	"USD": {},
+	"EUR": {},
+	"CAD": {},
+}
 
-var Currencies []string
-
-func init() {
-	Currencies = []string{
-		USD, EUR, CAD,
-	}
+func IsSupportedCurrency(currency string) bool {
+	_, exists := Currencies[currency]
+	return exists
 }

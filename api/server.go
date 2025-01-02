@@ -8,19 +8,18 @@ import (
 )
 
 type Server struct {
-	config  utils.Config
-	queries *db.Queries
-	router  *gin.Engine
+	config utils.Config
+	store  db.Store
+	router *gin.Engine
 }
 
-func NewServer(config utils.Config, queries *db.Queries) *Server {
+func NewServer(config utils.Config, store db.Store) *Server {
 	server := &Server{
-		config:  config,
-		queries: queries,
+		config: config,
+		store:  store,
 	}
 
 	server.SetupRouter()
-
 	return server
 }
 

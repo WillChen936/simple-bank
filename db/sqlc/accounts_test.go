@@ -76,7 +76,7 @@ func TestDeleteAccount(t *testing.T) {
 func createRandomAccount(t *testing.T) Account {
 	arg := CreateAccountParams{
 		Owner:    utils.RandomOwner(),
-		Balance:  utils.RandomMoney(),
+		Balance:  1000,
 		Currency: utils.RandomCurrency(),
 	}
 	account, err := testQueries.CreateAccount(context.Background(), arg)

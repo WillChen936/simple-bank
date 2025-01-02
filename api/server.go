@@ -4,6 +4,7 @@ import (
 	db "github.com/WillChen936/simple-bank/db/sqlc"
 	"github.com/WillChen936/simple-bank/utils"
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
 
 type Server struct {

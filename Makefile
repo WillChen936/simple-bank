@@ -24,6 +24,8 @@ migratedown1:
 
 sqlc:
 	sqlc generate
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/WillChen936/simple-bank/db/sqlc Store
 test:
 	go test -v -cover ./...
 server:

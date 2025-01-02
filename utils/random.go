@@ -27,17 +27,17 @@ func RandomString(length int) string {
 	return sb.String()
 }
 
-func CreateRandomOwner() string {
+func RandomOwner() string {
 	firstname := RandomString(int(RandomInt(4, 8)))
 	lastname := RandomString(int(RandomInt(2, 6)))
 	return firstname + " " + lastname
 }
 
-func CreateRandomMoney() int64 {
+func RandomMoney() int64 {
 	return RandomInt(0, 1000)
 }
 
-func CreateRandomCurrency() string {
+func RandomCurrency() string {
 	currencies := Currencies
 	size := len(currencies)
 

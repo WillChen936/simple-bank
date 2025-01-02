@@ -31,6 +31,7 @@ func TestTransferTx(t *testing.T) {
 		}()
 	}
 
+	existed := make(map[int]bool)
 	for i := 0; i < tasks; i++ {
 		err := <-errs
 		require.NoError(t, err)
@@ -71,6 +72,36 @@ func TestTransferTx(t *testing.T) {
 
 		_, err = store.GetEntry(context.Background(), fromEntry.ID)
 		require.NoError(t, err)
+
+		// Accounts
+		fromAccount := result.FromAccount
+		require.NotEmpty(t, fromAccount)
+		require.Equal(t, fromAccount.ID, account1.ID)
+
+		toAccount := result.ToAccount
+		require.NotEmpty(t, toAccount)
+		require.Equal(t, toAccount.ID, account2.ID)
+
+		// Account's Balance
+		diff1 := toAccount.Balance - account2.Balance
+		diff2 := fromAccount.Balance - account1.Balance
+		require.Equal(t, -diff1, diff2)
+		require.True(t, diff1 > 0)
+		require.True(t, diff1%amount == 0)
+
+		k := int(diff1 / amount)
+		require.True(t, k >= 1 && k <= tasks)
+		require.NotContains(t, existed, k)
+		existed[k] = true
 	}
 
+	// Check Updated Account
+	updatedAccount1, err := testQueries.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+
+	updatedAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+
+	require.Equal(t, updatedAccount1.Balance, account1.Balance-int64(tasks)*amount)
+	require.Equal(t, updatedAccount2.Balance, account2.Balance+int64(tasks)*amount)
 }

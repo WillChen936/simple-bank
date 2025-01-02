@@ -85,6 +85,8 @@ func createRandomAccount(t *testing.T) Account {
 	require.Equal(t, account.Owner, arg.Owner)
 	require.Equal(t, account.Balance, arg.Balance)
 	require.Equal(t, account.Currency, arg.Currency)
+	require.NotZero(t, account.ID)
+	require.NotZero(t, account.CreatedAt)
 
 	return account
 }

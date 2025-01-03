@@ -11,7 +11,7 @@ logindb:
 	sudo docker exec -it postgres17 psql -U root -d simple-bank
 
 # Migrations
-migratecreate:
+createmigration:
 	migrate create -ext sql -dir db/migrations -seq $(NAME)
 migrateup:
 	migrate -path db/migrations -database "postgresql://root:secret@localhost:5432/simple-bank?sslmode=disable" -verbose up

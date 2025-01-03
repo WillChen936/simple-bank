@@ -74,8 +74,10 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func createRandomAccount(t *testing.T) Account {
+	user := createRandomUser(t)
+
 	arg := CreateAccountParams{
-		Owner:    utils.RandomOwner(),
+		Owner:    user.Username,
 		Balance:  1000,
 		Currency: utils.RandomCurrency(),
 	}

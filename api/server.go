@@ -33,6 +33,8 @@ func (server *Server) SetupRouter() {
 	router := gin.Default()
 
 	router.POST("/accounts", server.CreateAccount)
+	router.GET("/accounts/:id", server.GetAccount)
+	router.GET("/accounts", server.ListAccount)
 
 	server.router = router
 }

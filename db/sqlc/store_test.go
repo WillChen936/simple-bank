@@ -42,9 +42,9 @@ func TestTransferTx(t *testing.T) {
 		// Transfer
 		transfer := result.Transfer
 		require.NotEmpty(t, transfer)
-		require.Equal(t, transfer.FromAccountID, account1.ID)
-		require.Equal(t, transfer.ToAccountID, account2.ID)
-		require.Equal(t, transfer.Amount, amount)
+		require.Equal(t, account1.ID, transfer.FromAccountID)
+		require.Equal(t, account2.ID, transfer.ToAccountID)
+		require.Equal(t, amount, transfer.Amount)
 		require.NotZero(t, transfer.ID)
 		require.NotZero(t, transfer.CreatedAt)
 
@@ -54,8 +54,8 @@ func TestTransferTx(t *testing.T) {
 		// FromEntry
 		fromEntry := result.FromEntry
 		require.NotEmpty(t, fromEntry)
-		require.Equal(t, fromEntry.AccountID, account1.ID)
-		require.Equal(t, fromEntry.Amount, -amount)
+		require.Equal(t, account1.ID, fromEntry.AccountID)
+		require.Equal(t, -amount, fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreatedAt)
 
@@ -65,8 +65,8 @@ func TestTransferTx(t *testing.T) {
 		// ToEnrty
 		toEntry := result.ToEntry
 		require.NotEmpty(t, toEntry)
-		require.Equal(t, toEntry.AccountID, account2.ID)
-		require.Equal(t, toEntry.Amount, amount)
+		require.Equal(t, account2.ID, toEntry.AccountID)
+		require.Equal(t, amount, toEntry.Amount)
 		require.NotZero(t, toEntry.ID)
 		require.NotZero(t, toEntry.CreatedAt)
 
@@ -76,11 +76,11 @@ func TestTransferTx(t *testing.T) {
 		// Accounts
 		fromAccount := result.FromAccount
 		require.NotEmpty(t, fromAccount)
-		require.Equal(t, fromAccount.ID, account1.ID)
+		require.Equal(t, account1.ID, fromAccount.ID)
 
 		toAccount := result.ToAccount
 		require.NotEmpty(t, toAccount)
-		require.Equal(t, toAccount.ID, account2.ID)
+		require.Equal(t, account2.ID, toAccount.ID)
 
 		// Account's Balance
 		diff1 := toAccount.Balance - account2.Balance
@@ -102,8 +102,8 @@ func TestTransferTx(t *testing.T) {
 	updatedAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
 
-	require.Equal(t, updatedAccount1.Balance, account1.Balance-int64(tasks)*amount)
-	require.Equal(t, updatedAccount2.Balance, account2.Balance+int64(tasks)*amount)
+	require.Equal(t, account1.Balance-int64(tasks)*amount, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance+int64(tasks)*amount, updatedAccount2.Balance)
 }
 
 func TestTransferTxForDeadlock(t *testing.T) {
@@ -147,6 +147,6 @@ func TestTransferTxForDeadlock(t *testing.T) {
 	updatedAccount2, err := testQueries.GetAccount(context.Background(), account2.ID)
 	require.NoError(t, err)
 
-	require.Equal(t, updatedAccount1.Balance, account1.Balance)
-	require.Equal(t, updatedAccount2.Balance, account2.Balance)
+	require.Equal(t, account1.Balance, updatedAccount1.Balance)
+	require.Equal(t, account2.Balance, updatedAccount2.Balance)
 }

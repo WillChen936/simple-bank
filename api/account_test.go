@@ -151,7 +151,7 @@ func TestGetAccountAPI(t *testing.T) {
 		name          string
 		accountID     int64
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		{
 			name:      "OK",
@@ -162,7 +162,7 @@ func TestGetAccountAPI(t *testing.T) {
 					Times(1).
 					Return(account, nil)
 			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
 				requireBodyMatchAccount(t, recorder.Body, account)
 			},
@@ -175,7 +175,7 @@ func TestGetAccountAPI(t *testing.T) {
 					GetAccount(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
@@ -188,7 +188,7 @@ func TestGetAccountAPI(t *testing.T) {
 					Times(1).
 					Return(db.Account{}, sql.ErrNoRows)
 			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
 			},
 		},
@@ -201,7 +201,7 @@ func TestGetAccountAPI(t *testing.T) {
 					Times(1).
 					Return(db.Account{}, sql.ErrConnDone)
 			},
-			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
 			},
 		},
@@ -223,7 +223,7 @@ func TestGetAccountAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
-			tc.checkResponse(t, recorder)
+			tc.checkResponse(recorder)
 		})
 	}
 }

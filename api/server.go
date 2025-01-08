@@ -32,11 +32,11 @@ func NewServer(config utils.Config, store db.Store) *Server {
 func (server *Server) SetupRouter() {
 	router := gin.Default()
 
-	router.POST("/accounts", server.CreateAccount)
-	router.GET("/accounts/:id", server.GetAccount)
-	router.GET("/accounts", server.ListAccount)
+	router.POST("/accounts", server.createAccount)
+	router.GET("/accounts/:id", server.getAccount)
+	router.GET("/accounts", server.listAccount)
 
-	router.POST("/transfers", server.CreateTransfer)
+	router.POST("/transfers", server.createTransfer)
 
 	server.router = router
 }

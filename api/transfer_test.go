@@ -43,7 +43,7 @@ func TestCreateTransfer(t *testing.T) {
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(account1, nil)
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account2.ID)).Times(1).Return(account2, nil)
 
-				arg := db.CreateTransferParams{
+				arg := db.TransferTxParams{
 					FromAccountID: account1.ID,
 					ToAccountID:   account2.ID,
 					Amount:        amount,
@@ -63,6 +63,8 @@ func TestCreateTransfer(t *testing.T) {
 			defer ctrl.Finish()
 
 			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 

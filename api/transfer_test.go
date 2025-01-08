@@ -16,9 +16,9 @@ import (
 )
 
 func TestCreateTransfer(t *testing.T) {
-	user1 := createRandomUser(t)
-	user2 := createRandomUser(t)
-	user3 := createRandomUser(t)
+	user1 := createRandomUser()
+	user2 := createRandomUser()
+	user3 := createRandomUser()
 	account1 := createRandomAccount(user1.Username)
 	account2 := createRandomAccount(user2.Username)
 	account3 := createRandomAccount(user3.Username)

@@ -11,7 +11,7 @@ func TestCreateUser(t *testing.T) {
 
 }
 
-func createRandomUser(t *testing.T) db.User {
+func createRandomUser() db.User {
 	owner := utils.RandomOwner()
 
 	return db.User{

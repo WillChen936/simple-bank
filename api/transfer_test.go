@@ -197,18 +197,18 @@ func TestCreateTransfer(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
 			store := mockdb.NewMockStore(ctrl)
-			tc.buildStubs(store)
+			testCase.buildStubs(store)
 
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
-			data, err := json.Marshal(tc.body)
+			data, err := json.Marshal(testCase.body)
 			require.NoError(t, err)
 
 			url := "/transfers"
@@ -216,7 +216,7 @@ func TestCreateTransfer(t *testing.T) {
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
-			tc.checkResponse(*recorder)
+			testCase.checkResponse(*recorder)
 		})
 	}
 }

@@ -209,23 +209,23 @@ func TestGetAccountAPI(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
 			store := mockdb.NewMockStore(ctrl)
-			tc.buildStubs(store)
+			testCase.buildStubs(store)
 
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/accounts/%d", tc.accountID)
+			url := fmt.Sprintf("/accounts/%d", testCase.accountID)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
-			tc.checkResponse(recorder)
+			testCase.checkResponse(recorder)
 		})
 	}
 }
@@ -346,13 +346,13 @@ func TestListAccountsAPI(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
 			store := mockdb.NewMockStore(ctrl)
-			tc.buildStubs(store)
+			testCase.buildStubs(store)
 
 			server := newTestServer(store)
 			recorder := httptest.NewRecorder()
@@ -362,12 +362,12 @@ func TestListAccountsAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			query := request.URL.Query()
-			query.Add("page_id", fmt.Sprintf("%d", tc.query.pageID))
-			query.Add("page_size", fmt.Sprintf("%d", tc.query.pageSize))
+			query.Add("page_id", fmt.Sprintf("%d", testCase.query.pageID))
+			query.Add("page_size", fmt.Sprintf("%d", testCase.query.pageSize))
 			request.URL.RawQuery = query.Encode()
 
 			server.router.ServeHTTP(recorder, request)
-			tc.checkResponse(recorder)
+			testCase.checkResponse(recorder)
 		})
 	}
 }

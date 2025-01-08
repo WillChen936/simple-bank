@@ -10,17 +10,19 @@ import (
 
 	mockdb "github.com/WillChen936/simple-bank/db/mock"
 	db "github.com/WillChen936/simple-bank/db/sqlc"
-	"github.com/WillChen936/simple-bank/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
 func TestCreateTransfer(t *testing.T) {
+	user1 := createRandomUser(t)
+	user2 := createRandomUser(t)
+	user3 := createRandomUser(t)
+	account1 := createRandomAccount(user1.Username)
+	account2 := createRandomAccount(user2.Username)
+	account3 := createRandomAccount(user3.Username)
 	amount := int64(10)
-	account1 := createRandomAccount(utils.RandomOwner())
-	account2 := createRandomAccount(utils.RandomOwner())
-	account3 := createRandomAccount(utils.RandomOwner())
 
 	account1.Currency = "USD"
 	account2.Currency = "USD"

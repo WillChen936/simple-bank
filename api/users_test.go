@@ -3,8 +3,10 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	mockdb "github.com/WillChen936/simple-bank/db/mock"
@@ -15,13 +17,38 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestCreateUserAPI(t *testing.T) {
+	user, password := createRandomUser(t)
+
 	testCases := []struct {
 		name          string
 		body          gin.H
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(recorder httptest.ResponseRecorder)
-	}{}
+	}{
+		{
+			name: "OK",
+			body: gin.H{
+				"username":  user.Username,
+				"password":  password,
+				"full_name": user.FullName,
+				"email":     user.Email,
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				arg := db.CreateUserParams{
+					Username:       user.Username,
+					HashedPassword: user.HashedPassword,
+					FullName:       user.FullName,
+					Email:          user.Email,
+				}
+				store.EXPECT().CreateUser(gomock.Any(), arg).Times(1).Return(user, nil)
+			},
+			checkResponse: func(recorder httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchUser(t, recorder.Body, user)
+			},
+		},
+	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
@@ -47,13 +74,33 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-func createRandomUser() db.User {
+func createRandomUser(t *testing.T) (user db.User, password string) {
 	owner := utils.RandomOwner()
+	username := strings.Fields(owner)[0]
+	password = utils.RandomString(8)
 
-	return db.User{
-		Username:       owner,
-		HashedPassword: utils.RandomString(8),
+	hashedPassword, err := utils.HashPassword(password)
+	require.NoError(t, err)
+
+	user = db.User{
+		Username:       username,
+		HashedPassword: hashedPassword,
 		FullName:       owner,
 		Email:          utils.RandomEmail(),
 	}
+
+	return
+}
+
+func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
+	data, err := io.ReadAll(body)
+	require.NoError(t, err)
+
+	var gotUser db.User
+	err = json.Unmarshal(data, &gotUser)
+	require.NoError(t, err)
+	require.Equal(t, user.Username, gotUser.Username)
+	require.Equal(t, user.FullName, gotUser.FullName)
+	require.Equal(t, user.Email, gotUser.Email)
+	require.Empty(t, gotUser.HashedPassword)
 }

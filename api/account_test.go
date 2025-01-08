@@ -20,7 +20,7 @@ import (
 )
 
 func TestCreateAccountAPI(t *testing.T) {
-	user := createRandomUser()
+	user, _ := createRandomUser(t)
 	account := createRandomAccount(user.Username)
 
 	testCases := []struct {
@@ -146,7 +146,7 @@ func TestCreateAccountAPI(t *testing.T) {
 }
 
 func TestGetAccountAPI(t *testing.T) {
-	user := createRandomUser()
+	user, _ := createRandomUser(t)
 	account := createRandomAccount(user.Username)
 
 	testCases := []struct {
@@ -232,7 +232,7 @@ func TestGetAccountAPI(t *testing.T) {
 
 func TestListAccountsAPI(t *testing.T) {
 	size := 5
-	user := createRandomUser()
+	user, _ := createRandomUser(t)
 	accounts := make([]db.Account, size)
 
 	for i := 0; i < size; i++ {

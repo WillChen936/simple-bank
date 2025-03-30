@@ -1,0 +1,43 @@
+Project simple_bank {
+  database_type: 'PostgreSQL'
+  Note: '''
+    Simple Bank Database
+  '''
+}
+
+Table accounts {
+  id bigserial [pk]
+  owner varchar [not null]
+  balance numeric(10,2) [not null]
+  currency varchar [not null]
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    owner
+  }
+}
+
+Table entries {
+  id bigserial [pk]
+  account_id bigint [ref: > accounts.id, not null]
+  amount numeric(10,2) [not null, note: 'Can be negative or postive']
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    account_id
+  }
+}
+
+Table transfers {
+  id bigserial [pk]
+  from_account_id bigint [ref: > accounts.id, not null]
+  to_account_id bigint [ref: > accounts.id, not null]
+  amount decimal [not null, note: 'Must be positive']
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    from_account_id
+    to_account_id
+    (from_account_id, to_account_id)
+  }
+}
